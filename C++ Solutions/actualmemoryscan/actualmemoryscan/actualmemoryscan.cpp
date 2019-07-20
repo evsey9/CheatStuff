@@ -1,6 +1,6 @@
 // actualmemoryscan.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#include "PointerInfo.h"
 #include <iostream>
 #include <Windows.h>
 #include <string>
@@ -9,10 +9,12 @@
 using namespace std;
 
 DWORD pid;
-DWORD ValuePointer = 0x201B3750;
+DWORD EnemyOp1ValuePointer = 0x05CBE6B0;
+vector<DWORD> EnemyOp1OffsetArray{ 0x0, 0x2A8, 0x478, 0x140 };
 DWORD BasePointer;
 //DWORD ValuePointer;
 int Value;
+PointerInfo EnemyOp1(EnemyOp1ValuePointer, EnemyOp1OffsetArray);
 DWORD64 GetBaseAddress(const HANDLE hProcess) {
 	if (hProcess == NULL) {
 		cout << "no access";
@@ -33,9 +35,13 @@ DWORD64 GetBaseAddress(const HANDLE hProcess) {
 }
 
 
+
 int main()
 {
-	
+	std::cin.unsetf(std::ios::dec);
+	std::cin.unsetf(std::ios::hex);
+	std::cin.unsetf(std::ios::oct); 
+	cout << "test " << hex << EnemyOp1.BaseClassOffset;
 	char WindowName[100];
 	cout << "Enter window name: ";
 	cin >> WindowName;
@@ -46,36 +52,17 @@ int main()
 	HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 	BasePointer = GetBaseAddress(pHandle);
 	cout << " Base " << hex << BasePointer;
-	std::cin.unsetf(std::ios::dec);
-	std::cin.unsetf(std::ios::hex);
-	std::cin.unsetf(std::ios::oct);
-	cout << "Enter pointer offset: ";
-	cin >> ValuePointer;
-	cout << "\n";
-	
-	DWORD ActPointer = BasePointer + ValuePointer;
-	Sleep(2000);
+	DWORD64 EndPointer = EnemyOp1.GetEndPointer(BasePointer, pHandle);
 	while (true) {
 		system("CLS");
-		ActPointer = BasePointer + ValuePointer;
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &ActPointer, sizeof(ActPointer), 0);
-		ActPointer += 0x80;
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &ActPointer, sizeof(ActPointer), 0);
-		ActPointer += 0x40;
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &ActPointer, sizeof(ActPointer), 0);
-		ActPointer += 0x20;
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &ActPointer, sizeof(ActPointer), 0);
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &Value, sizeof(Value), 0);
-		ReadProcessMemory(pHandle, (LPVOID)ActPointer, &Value, sizeof(Value), 0);
+		ReadProcessMemory(pHandle, (LPVOID)EndPointer, &Value, sizeof(Value), 0);
 		//Value -= 20;
 		//HBRUSH red = CreateSolidBrush(RGB(255, Value * 2, 0));
 		//RECT rect = { 100, 100, 100 + Value, 200 };
 		//FillRect(hGame, &rect, red);
-		
 		cout << " " << dec << Value << endl;
 		Sleep(100);
 	}
-	
 	//MyAmmo += 3;
 	//WriteProcessMemory(pHandle, (LPVOID)Ammo, &MyAmmo, sizeof(MyAmmo), 0);
 	CloseHandle(pHandle);

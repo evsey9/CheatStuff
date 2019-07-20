@@ -18,5 +18,13 @@
     <ClCompile Include="actualmemoryscan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PointerInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PointerInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

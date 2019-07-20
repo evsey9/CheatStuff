@@ -152,6 +152,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="actualmemoryscan.cpp" />
+    <ClCompile Include="PointerInfo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PointerInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
